@@ -68,6 +68,7 @@ export interface HeaderData {
   view: Views
   goToAlbum?: () => void
   imagesPicked: number
+  max?: number
   multiple: boolean
   picked: boolean
   album?: Album
@@ -125,14 +126,14 @@ const styles = StyleSheet.create({
   defaultCheckedBg: {
     width: '100%',
     height: '100%',
-    backgroundColor: 'rgba(0,0,0,0.2)',
+    backgroundColor: '#ffffff77',
   },
   defaultCheckedContainer: {
     position: 'absolute',
     right: '10%',
     bottom: '20%',
-    width: '30%',
-    height: '30%',
+    width: '20%',
+    height: '20%',
   },
   defaultAlbumContainer: {
     flex: 1,
@@ -152,9 +153,9 @@ const styles = StyleSheet.create({
   },
   defaultHeaderContainer: {
     width: '100%',
-    paddingTop: 80,
+    paddingTop: 20,
     padding: 20,
-    height: 130,
+    height: 70,
     justifyContent: 'space-between',
     flexDirection: 'row',
     backgroundColor: 'white',
@@ -167,12 +168,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 4,
     elevation: 3,
-    backgroundColor: 'black',
+    backgroundColor: '#ff8c00',
   },
   defaultHeaderButtonText: {
     fontSize: 14,
     letterSpacing: 0.25,
     color: 'white',
+  },
+  defaultHeaderSecondaryButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 4,
+    borderColor: '#ff8c00',
+    borderWidth: 1,
+  },
+  defaultHeaderSecondaryButtonText: {
+    fontSize: 14,
+    letterSpacing: 0.25,
+    color: '#254A63',
   },
 })
 
@@ -212,7 +227,7 @@ class ImageBox extends PureComponent<ImageBoxProps> {
         <View style={styles.defaultCheckedContainer}>
           <Svg viewBox='0 0 512 512'>
             <Path
-              fill='white'
+              fill='#FF8C00'
               d='M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z'
             />
           </Svg>
@@ -441,10 +456,10 @@ function DefaultHeader(props: HeaderData) {
                 <Text style={{ fontSize: 20 }}>{props.album.title}</Text>
               )}
               {!props.album && props.multiple && (
-                <Text style={{ fontSize: 20 }}>Select the images</Text>
+                <Text style={{ fontSize: 20 }}>Выберите изображения</Text>
               )}
               {!props.album && !props.multiple && (
-                <Text style={{ fontSize: 20 }}>Select an image</Text>
+                <Text style={{ fontSize: 20 }}>Выберите изображение</Text>
               )}
             </>
           )}
@@ -452,20 +467,17 @@ function DefaultHeader(props: HeaderData) {
             <>
               {props.multiple && (
                 <Text style={{ fontSize: 20 }}>
-                  Selected {props.imagesPicked} images
+                  {'Выбрано ' + props.imagesPicked + '/' + props.max}
                 </Text>
               )}
               {!props.multiple && (
-                <Text style={{ fontSize: 20 }}>Selected</Text>
+                <Text style={{ fontSize: 20 }}>Изображение выбрано</Text>
               )}
-              <Pressable
-                style={styles.defaultHeaderButton}
-                onPress={props.save}
-              >
-                <Text style={styles.defaultHeaderButtonText}>SAVE</Text>
-              </Pressable>
             </>
           )}
+          <Pressable style={styles.defaultHeaderButton} onPress={props.save}>
+            <Text style={styles.defaultHeaderButtonText}>Принять</Text>
+          </Pressable>
         </>
       )}
       {props.view == 'album' && (
@@ -576,6 +588,7 @@ export function ImagePicker(props: ImagePickerProps) {
             view='gallery'
             imagesPicked={selectedAssets.length}
             picked={selectedAssets.length > 0}
+            max={props.limit}
             multiple={props.multiple || false}
             noAlbums={props.noAlbums || false}
             album={selectedAlbum}
